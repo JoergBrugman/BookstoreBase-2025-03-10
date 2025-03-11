@@ -1,5 +1,8 @@
 namespace GuATraining.Book.Books;
 
+/// <summary>
+/// Book is the Mater Table for books
+/// </summary>
 table 50100 "BSB Book"
 {
     Caption = 'Book';
