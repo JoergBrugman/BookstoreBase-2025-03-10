@@ -6,6 +6,7 @@ namespace GuATraining.Book.Books;
 table 50100 "BSB Book"
 {
     Caption = 'Book';
+    DataCaptionFields = "No.", Description;
 
     fields
     {
@@ -24,7 +25,7 @@ table 50100 "BSB Book"
         field(5; Type; Option)
         {
             Caption = 'Type';
-            OptionMembers = "",Hardcover,Paperback;
+            OptionMembers = " ",Hardcover,Paperback;
             OptionCaption = ' ,Hardcover,Paperback';
         }
         field(7; Created; Date)
