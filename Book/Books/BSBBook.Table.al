@@ -7,6 +7,7 @@ table 50100 "BSB Book"
 {
     Caption = 'Book';
     DataCaptionFields = "No.", Description;
+    LookupPageId = "BSB Book List";
 
     fields
     {
@@ -16,10 +17,18 @@ table 50100 "BSB Book"
             DataClassification = ToBeClassified;
             NotBlank = true;
         }
-        field(2; Description; Text[100]) { Caption = 'Description'; }
+        field(2; Description; Text[100])
+        {
+            Caption = 'Description';
+            trigger OnValidate()
+            begin
+                if ("Search Description" = UpperCase(xRec.Description)) or ("Search Description" = '') then
+                    "Search Description" := CopyStr(Description, 1, MaxStrLen("Search Description"));
+            end;
+        }
         field(3; "Search Description"; Code[100])
         {
-            Caption = 'Search Description'; //[ ] Muss noch standardkonform versorgt werden
+            Caption = 'Search Description'; //[x] Muss noch standardkonform versorgt werden
         }
         field(4; Blocked; Boolean) { Caption = 'Blocked'; }
         field(5; Type; Option)
@@ -30,12 +39,12 @@ table 50100 "BSB Book"
         }
         field(7; Created; Date)
         {
-            Caption = 'Created'; //TODO Muss automatisch gestezt werden
+            Caption = 'Created';
             Editable = false;
         }
         field(8; "Last Date Modified"; Date)
         {
-            Caption = 'Last Date Modified'; //TODO Muss automatisch gestezt werden
+            Caption = 'Last Date Modified';
             Editable = false;
         }
         field(10; Author; Text[50]) { Caption = 'Author'; }
@@ -65,6 +74,36 @@ table 50100 "BSB Book"
         key(PK; "No.") { Clustered = true; }
     }
 
-    //TODO Ein Buch darf nicht gelöscht werden.
-    //TODO TestBlocked() noch implementieren.
+    fieldgroups
+    {
+        fieldgroup(DropDown; "No.", Description, Author, "No. of Pages", ISBN, Type, "Edition No.") { }
+    }
+
+    var
+        OnDeleteBookErr: Label 'A Book cannot be deleted';
+
+    trigger OnInsert()
+    begin
+        Created := Today;
+    end;
+
+    trigger OnModify()
+    begin
+        "Last Date Modified" := Today;
+    end;
+
+    trigger OnRename()
+    begin
+        "Last Date Modified" := Today;
+    end;
+
+    trigger OnDelete()
+    begin
+        Error(OnDeleteBookErr);
+    end;
+
+    procedure TestBlocked()
+    begin
+        TestField(Blocked, false);
+    end;
 }
