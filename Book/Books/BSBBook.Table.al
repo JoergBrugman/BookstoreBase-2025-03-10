@@ -106,4 +106,10 @@ table 50100 "BSB Book"
     begin
         TestField(Blocked, false);
     end;
+
+    procedure ShowCard()
+    begin
+        Page.Run(Page::"BSB Book Card", Rec);
+    end;
+
 }
