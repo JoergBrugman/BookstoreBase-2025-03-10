@@ -31,11 +31,9 @@ table 50100 "BSB Book"
             Caption = 'Search Description'; //[x] Muss noch standardkonform versorgt werden
         }
         field(4; Blocked; Boolean) { Caption = 'Blocked'; }
-        field(5; Type; Option)
+        field(5; Type; Enum "BSB Book Type")
         {
             Caption = 'Type';
-            OptionMembers = " ",Hardcover,Paperback;
-            OptionCaption = ' ,Hardcover,Paperback';
         }
         field(7; Created; Date)
         {
@@ -107,9 +105,33 @@ table 50100 "BSB Book"
         TestField(Blocked, false);
     end;
 
+    /// <summary>
+    /// Opens the Book Card based on Rec.
+    /// </summary>
     procedure ShowCard()
     begin
-        Page.Run(Page::"BSB Book Card", Rec);
+        ShowCard(Rec);
     end;
 
+    /// <summary>
+    ///  First read the Book-Record based on BookNo and the opens the Book Card based on read record.
+    /// </summary>
+    /// <param name="BookNo">No. of Record to read</param>
+    procedure ShowCard(BookNo: Code[20])
+    var
+        BSBBook: Record "BSB Book";
+    begin
+        if not BSBBook.Get(BookNo) then
+            exit;
+        ShowCard(BSBBook);
+    end;
+
+    /// <summary>
+    /// Opens the Book Card based on given Record
+    /// </summary>
+    /// <param name="BSBBook">Record to show</param>
+    local procedure ShowCard(BSBBook: Record "BSB Book")
+    begin
+        Page.Run(page::"BSB Book Card", BSBBook);
+    end;
 }
