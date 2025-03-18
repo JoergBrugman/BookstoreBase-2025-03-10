@@ -19,7 +19,7 @@ table 50100 "BSB Book"
         }
         field(2; Description; Text[100])
         {
-            Caption = 'Description';
+            Caption = 'Description', Comment = 'de-DE=Beschreibung';
             trigger OnValidate()
             begin
                 if ("Search Description" = UpperCase(xRec.Description)) or ("Search Description" = '') then
